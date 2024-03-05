@@ -59,7 +59,7 @@ def login_user():
         user = User.validate_user(
             username=form.username.data,
             password=form.password.data)
-
+# declare global session key
         if user:
             session["username"] = user.username
             return redirect(f"/users/{user.username}")
@@ -74,6 +74,8 @@ def login_user():
 @app.get('/users/<username>')
 def show_user_info(username):
     """Shows user information"""
+
+    # check that session key = username
     form = CSRFProtectForm()
     if "username" not in session:
         flash("You Must Be Logged In")
@@ -86,5 +88,7 @@ def show_user_info(username):
 @app.post("/logout")
 def logout_user():
     """Handles current user loggout."""
+
+    # needs if validate on submit
     session.pop("username", None)
     return redirect('/')
