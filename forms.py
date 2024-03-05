@@ -2,7 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Email
 
-class RegisterForm(FLaskForm):
+
+class RegisterForm(FlaskForm):
     """Form for registering new user"""
 
     username = StringField(
@@ -14,11 +15,10 @@ class RegisterForm(FLaskForm):
         "Password",
         validators=[InputRequired()]
     )
-
+# add input required
     email = StringField(
         "Email",
         validators=[
-            InputRequired(),
             Email()
         ]
     )
@@ -33,7 +33,7 @@ class RegisterForm(FLaskForm):
         validators=[InputRequired()]
     )
 
-class LoginForm(FLaskForm):
+class LoginForm(FlaskForm):
     """Form for logging in user"""
 
     username = StringField(
@@ -45,3 +45,7 @@ class LoginForm(FLaskForm):
         "Password",
         validators=[InputRequired()]
     )
+
+
+class CSRFProtectForm(FlaskForm):
+    """For just for CSRF Protection"""
