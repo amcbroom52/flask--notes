@@ -68,7 +68,7 @@ class User(db.Model):
             return False
 
 class Note(db.Model):
-
+    """Notes"""
     __tablename__ = "notes"
 
     id = db.Column(

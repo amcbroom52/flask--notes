@@ -10,30 +10,23 @@
 
 <ul>
 
-{% for note in user.notes %}
+  {% for note in user.notes %}
 
-<h4 class="mb-2">{{ note.title }}</h4>
-<p class="mb-2"> {{ note.content }}</p>
+  <h4 class="mb-2">{{ note.title }}</h4>
+  <p class="mb-2"> {{ note.content }}</p>
 
-<form>
-  <button
-    type="submit"
-    class="btn btn-secondary mb-2"
-    formaction="/notes/{{note.id}}/update"
-    formmethod="GET">
-    Edit
-  </button>
+  <form>
+    {{form.hidden_tag()}}
+    <button type="submit" class="btn btn-secondary mb-2" formaction="/notes/{{note.id}}/update" formmethod="GET">
+      Edit
+    </button>
 
-  <button
-    type="submit"
-    class="btn btn-danger"
-    formaction="notes/{{note.id}}/delete"
-    formmethod="POST">
-    DELETE
-  </button>
-</form>
+    <button type="submit" class="btn btn-danger" formaction="/notes/{{note.id}}/delete" formmethod="POST">
+      DELETE
+    </button>
+  </form>
 
-{% endfor %}
+  {% endfor %}
 
 </ul>
 
@@ -41,27 +34,15 @@
 
   {{form.hidden_tag()}}
 
-  <button
-    type="submit"
-    class="btn btn-secondary"
-    formaction="/users/{{user.username}}/notes/add"
-    formmethod="GET">
+  <button type="submit" class="btn btn-secondary" formaction="/users/{{user.username}}/notes/add" formmethod="GET">
     Add Note
   </button>
 
-  <button
-    type="submit"
-    class="btn btn-primary"
-    formaction="/logout"
-    formmethod="POST">
+  <button type="submit" class="btn btn-primary" formaction="/logout" formmethod="POST">
     Logout
   </button>
 
-  <button
-    type="submit"
-    class="btn btn-danger"
-    formaction="/users/{{user.username}}/delete"
-    formmethod="POST">
+  <button type="submit" class="btn btn-danger" formaction="/users/{{user.username}}/delete" formmethod="POST">
     DELETE USER
   </button>
 </form>
