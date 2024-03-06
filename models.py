@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from sqlalchemy.exc import IntegrityError
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -16,39 +15,6 @@ class User(db.Model):
     """User Model"""
 
     __tablename__ = "users"
-# put class methods below properties
-    @classmethod
-    def register_user(cls, username, password, email, first_name, last_name):
-        """Checks registration of a new user"""
-
-        hash = bcrypt.generate_password_hash(password).decode("utf8")
-        try:
-            user =  cls(
-                username=username,
-                hashed_password=hash,
-                email=email,
-                first_name=first_name,
-                last_name=last_name
-            )
-            ##.commit needs to go in app.py
-            db.session.add(user)
-            db.session.commit()
-            return user
-        except IntegrityError:
-            return False
-
-    @classmethod
-    # change function to authenticate
-    def validate_user(cls, username, password):
-        """Authenticate user"""
-
-        user = cls.query.filter_by(username=username).one_or_none()
-
-        if user and bcrypt.check_password_hash(user.hashed_password, password):
-            return user
-        else:
-            return False
-
 
     username = db.Column(
         db.String(20),
@@ -59,9 +25,10 @@ class User(db.Model):
         db.String(100),
         nullable=False
     )
-# make email unique (don't forget to drop the table)
+
     email = db.Column(
         db.String(50),
+        unique=True,
         nullable=False
     )
 
@@ -74,3 +41,56 @@ class User(db.Model):
         db.String(30),
         nullable=False
     )
+
+    @classmethod
+    def register_user(cls, username, password, email, first_name, last_name):
+        """Checks registration of a new user"""
+
+        hash = bcrypt.generate_password_hash(password).decode("utf8")
+        return cls(
+            username=username,
+            hashed_password=hash,
+            email=email,
+            first_name=first_name,
+            last_name=last_name
+        )
+
+
+    @classmethod
+    def authenticate_user(cls, username, password):
+        """Authenticates user"""
+
+        user = cls.query.filter_by(username=username).one_or_none()
+
+        if user and bcrypt.check_password_hash(user.hashed_password, password):
+            return user
+        else:
+            return False
+
+class Note(db.Model):
+
+    __tablename__ = "notes"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    title = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    content = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    owner_username = db.Column(
+        db.String(20),
+        db.ForeignKey('users.username'),
+        nullable=False
+    )
+
+    user = db.relationship('User', backref='notes')
